@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: mindmap-visualizer-api
+    rootDir: backend
+    env: docker
+    plan: free
+    dockerCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
