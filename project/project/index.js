@@ -4,10 +4,19 @@ import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 10000;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://mindmap-visualizer.netlify.app'] 
+    : ['http://localhost:5173']
+}));
 app.use(express.json());
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ status: 'ok' });
+});
 
 app.post('/scrape', async (req, res) => {
   const { url } = req.body;
@@ -19,11 +28,16 @@ app.post('/scrape', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
     });
     
     const page = await browser.newPage();
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
     
     const html = await page.content();
     const $ = cheerio.load(html);
@@ -83,5 +97,5 @@ app.post('/scrape', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
