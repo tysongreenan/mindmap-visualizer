@@ -19,5 +19,5 @@ COPY . .
 # Expose the port
 EXPOSE ${PORT}
 
-# Start the application
+# Start command
 CMD ["npm", "start"]
