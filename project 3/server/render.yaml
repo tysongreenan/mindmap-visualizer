@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mindmap-visualizer-api
+    env: docker
+    buildCommand: docker build -t mindmap-backend .
+    startCommand: docker run -p $PORT:10000 mindmap-backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
