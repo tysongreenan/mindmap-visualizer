@@ -3,8 +3,7 @@ FROM ghcr.io/puppeteer/puppeteer:21.5.2
 # Set environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable \
-    NODE_ENV=production \
-    PORT=10000
+    NODE_ENV=production
 
 # Create and set working directory
 WORKDIR /app
@@ -13,13 +12,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy application files
 COPY . .
 
 # Expose port
-EXPOSE ${PORT}
+EXPOSE 10000
 
 # Start the application
 CMD ["npm", "start"]
